@@ -101,4 +101,24 @@ defmodule Hello.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  @doc """
+  find one when input username and password.
+
+  ## Examples
+
+      iex> find_one("jayden", "123456")
+      %User{}
+  """
+  def find_one(%{"username" => username, "password" => password} = attrs) do
+
+    attrs
+    from(u in User)
+    |> where([u], u.username == ^username and u.password == ^password)
+    |> Repo.one()
+    |> wrap_response()
+  end
+
+  def wrap_response(nil), do: {:error, :record_not_found}
+  def wrap_response(record), do: {:ok, record}
 end

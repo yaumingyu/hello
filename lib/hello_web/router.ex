@@ -20,10 +20,11 @@ defmodule HelloWeb.Router do
     get "/", PageController, :index
   end
 
-  scope "/user", HelloWeb do
+  scope "/login", HelloWeb do
     pipe_through :api
 
-    get "/get", UserController, :getUser
+    get "/", LoginController, :getUser
+    post "/", LoginController, :login
 
   end
 

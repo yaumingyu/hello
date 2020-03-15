@@ -3,7 +3,6 @@ defmodule Graphql.Mutations.UserMutationTest do
   use ExUnit.Case
   use HelloWeb.ConnCase
   alias HelloWeb.AbsintheHelpers
-  alias Hello.Accounts
 
 
   describe "" do

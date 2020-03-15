@@ -29,6 +29,15 @@ defmodule Hello.AccountsTest do
       assert Accounts.get_user!(user.id) == user
     end
 
+    test "find_one/1 returns the one user with given attrs" do
+      user = user_fixture()
+      attrs = %{
+        "username" => user.username,
+        "password" => user.password
+      }
+      assert {:ok, user} == Accounts.find_one(attrs)
+    end
+
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.password == "some password"
