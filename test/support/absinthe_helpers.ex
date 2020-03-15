@@ -8,11 +8,11 @@ defmodule HelloWeb.AbsintheHelpers do
   end
 
 
-  def mutation_skeleton(mutation) do
+  def mutation_skeleton(mutation, variables) do
     %{
       "operationName" => "",
       "query" => "#{mutation}",
-      "variables" => ""
+      "variables" => variables
     }
   end
 end

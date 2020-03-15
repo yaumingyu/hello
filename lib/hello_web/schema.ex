@@ -1,6 +1,6 @@
 defmodule HelloWeb.Schema do
   use Absinthe.Schema
-  import_types HelloWeb.Schemas.User
+  import_types HelloWeb.Types.User
 
   alias HelloWeb.Resolvers
   query do
@@ -17,8 +17,7 @@ defmodule HelloWeb.Schema do
 
     @desc "Create a user"
     field :create_user, type: :user do
-      arg :username, non_null(:string)
-      arg :password, non_null(:string)
+      arg(:input, non_null(:create_user_input))
       resolve &Resolvers.User.create_user/3
     end
 

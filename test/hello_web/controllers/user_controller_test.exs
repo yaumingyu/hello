@@ -5,33 +5,31 @@ defmodule HelloWeb.UserControllerTest do
   alias Hello.Accounts
 
 
-  setup do
+  # 测试工作日志属性
+
+
+  defp with_create_test_user (_tags) do
     user_attrs = %{
       username: "test",
       password: "123456"
     }
     user = Accounts.create_user(user_attrs)
-    |>IO.inspect(label: "setup response => ", pretty: true)
     {:ok, user: user}
-  end
-
-  # 测试工作日志属性
-
-
-  def createTestUser (attr) do
-    Accounts.create_user(attr)
   end
 
 
   describe "user_controller" do
+    setup [:with_create_test_user]
+
     test "test get user router", %{conn: conn} do
-      conn = get(conn, "/user/get")
-      res = conn.resp_body
-      assert Jason.decode(res)
-      |>elem(1)
-      |>Map.get("message")
-      == "success"
-      assert conn.status == 200
+
+      response =
+      conn
+      |> get("/user/get")
+      |> json_response(200)
+      |> IO.inspect(label: "response => ", pretty: true)
+      assert Map.get(response, "message" ) == "success"
+
     end
 
     test "get user list", tag do
@@ -53,8 +51,8 @@ defmodule HelloWeb.UserControllerTest do
 
     test "put user", tag do
       mutation = """
-        mutation CreateUser{
-          createUser(username: "jayden", password: "123456") {
+        mutation CreateUser($input: CreateUserInput!){
+          createUser(input: $input) {
             id
             username
             password
@@ -62,10 +60,18 @@ defmodule HelloWeb.UserControllerTest do
         }
       """
 
+      create_user_input = %{
+        "input" => %{
+          "username" => "jayden",
+          "password" => "123456"
+        }
+      }
+
       response =
         tag.conn
-        |> post("/graphiql", AbsintheHelpers.mutation_skeleton(mutation))
+        |> post("/graphiql", AbsintheHelpers.mutation_skeleton(mutation, create_user_input))
         |> json_response(200)
+        |> IO.inspect(label: "response => ", pretty: true)
 
       assert get_in(response, ["data", "createUser", "username"]) == "jayden"
       assert get_in(response, ["data", "createUser", "password"]) == "123456"

@@ -5,7 +5,7 @@ defmodule HelloWeb.Resolvers.User do
   end
 
   def create_user(_parent, args, _resolution) do
-    Accounts.create_user(args)
+    args.input
+    |> Accounts.create_user()
   end
-
 end
